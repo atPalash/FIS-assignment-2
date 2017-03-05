@@ -65,19 +65,14 @@ router.route('/')
                     console.log('Order created!');
                     var id = order._id;
                     console.log(id);
-                    // get all the users
+
                 orders.find({}, function (err, orders) {
                         if (err) throw err;
-                        //console.log(orders);
-                        //db.close();
                     });
                 });
-
             res.writeHead(200,{'Content-Type':'text/plain'});
             res.end("New order created \n" + xml);
         })
-
-
     });
 
 module.exports = router;

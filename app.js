@@ -23,9 +23,8 @@ db.once('open', function () {
 });
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var orders = require('./routes/orders');
-var orderStatus = require('./routes/ordersStatus');
+
 
 var cons = require('consolidate');
 
@@ -51,15 +50,11 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
-
 app.use(passport.initialize());
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
-app.use('/users', users);
 app.use('/orders', orders);
-app.use('/orderStatus', orderStatus);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
