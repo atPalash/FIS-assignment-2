@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head 
+         content must come *after* these tags -->
+    <title>FIS Assignment-1</title>
+    <!-- Bootstrap -->
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="stylesheets/mystyles.css" rel="stylesheet">
+    <link href="stylesheets/font-awesome.min.css" rel="stylesheet">
+    <link href="stylesheets/bootstrap-social.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" ui-sref="app"><img src="images/tut-logo.jpg" height=30 width=41></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a>
+                        <span class="glyphicon glyphicon-home"
+                              aria-hidden="true"></span> Home</a></li>
+                        <li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a onclick="openStatus()">
+                            <span class="glyphicon glyphicon-log-in"></span> Order-Status</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <header class="jumbotron">
+			
+        <div class="container">
+            <div class="row row-header">
+                <div class="col-xs-12 col-sm-4 col-sm-push-8">
+                    <h1>FIS Assignment-1</h1>
+                    <p style="padding:40px;"></p>
+                    <p>HTML form input to XML conversion and validation</p>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-sm-pull-4">
+                <form class="form-horizontal" role="form" action="/orders" method="post">
+                    <label for="Buyer's Details" class="col-sm-8"><h3><i>Buyer's Details</i></h3></label>
+                        <div class="col-sm-8">
+                                <label for="name" class="col-sm-4">Name</label>
+                                <div class = "col-sm-6">
+                                    <input type="text" class="form-control "name="name" placeholder="name" required>
+                                </div>
+                                <label for="email" class="col-sm-4">Email</label>
+                                <div class="col-sm-6">
+                                    <input type="email" class="form-control" name="email" placeholder="email" required>
+                                </div>
+                                <label for="phone" class="col-sm-4">Phone</label>
+                                <div class="col-sm-6">
+                                <input type="text" class="form-control" name="phone" placeholder="phone" required>
+                                </div>
+                        </div>
+                        <label for="Order Details" class="col-sm-8"><h3><i>Order Details</i></h3></label>
+                        <div class="col-sm-8">
+                                <label for="order" class="col-sm-4">Order</label>
+                                <div class = "col-sm-6">
+                                    <input type="text" class="form-control "name="title" placeholder="order" required>
+                                </div>
+                                <label for="frame type" class="col-sm-4">Frame-type</label>
+                                <div class = "col-sm-6">
+                                    <div class="radio">
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="frame" value="frame1"><a><img src="images/frame1.jpg" height=40 width=40></a>Frame-1</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="frame" value="frame2"><a><img src="images/frame2.jpg" height=40 width=40></a>Frame-2</a></label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="frame" value="frame3"><a><img src="images/frame3.jpg" height=40 width=40></a>Frame-3</a></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="frame color" class="col-sm-4">Frame-color</label>
+                                <div class="col-sm-6">
+                                    <select name="framecolor" class="form-control">
+                                        <option value="red">Red</option>
+                                        <option value="saab">Green</option>
+                                        <option value="fiat">Blue</option>
+                                    </select>
+                                </div>
+                                <label for="screen type" class="col-sm-4">Screen-type</label>
+                                <div class = "col-sm-6">                                    <div class="radio">
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="screen" value="screen1"><a><img src="images/screen1.jpg" height=40 width=40></a>Screen-1</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="screen" value="screen2"><a><img src="images/screen2.jpg" height=40 width=40></a>Screen-2</a></label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="screen" value="screen3"><a><img src="images/screen3.jpg" height=40 width=40></a>Screen-3</a></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="screen color" class="col-sm-4">Screen-color</label>
+                                <div class="col-sm-6">
+                                    <select name="screencolor" class="form-control">
+                                        <option value="red">Red</option>
+                                        <option value="green">Green</option>
+                                        <option value="green">Blue</option>
+                                    </select>
+                                </div>
+                                <label for="key type" class="col-sm-4">Keyboard-type</label>
+                                <div class = "col-sm-6">
+                                    <div class="radio">
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="key" value="keyboard1"><a><img src="images/key1.jpg" height=40 width=40></a>Keyboard-1</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="key" value="keyboard2"><a><img src="images/key2.jpg" height=40 width=40></a>Keyboard-2</a></label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="radio-inline"><input type="radio" name="key" value="keyboard3"><a><img src="images/key3.jpg" height=40 width=40></a>Keyboard-3</a></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="key color" class="col-sm-4">Keyboard-color</label>
+                                <div class="col-sm-6">
+                                    <select name="keycolor" class="form-control">
+                                        <option value="red">Red</option>
+                                        <option value="green">Green</option>
+                                        <option value="green">Blue</option>
+                                    </select>
+                                </div>
+                                <label for="comments" class="col-sm-4">Comments</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="note" placeholder="comments">
+                                </div>
+                                <label for="quantity" class="col-sm-4">Quantity</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" name="quantity" placeholder="quantity" required>
+                                </div>
+                                <label for="price" class="col-sm-4">Price</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" name="price" placeholder="price" required>
+                                </div>
+                        </div>
+                        <label for="Receiver's Details" class="col-sm-8"><h3><i>Receiver's Details</i></h3></label>
+                        <div class="col-sm-8">
+                            <label for="receiver name" class="col-sm-4">Name</label>
+                            <div class = "col-sm-6">
+                                <input type="text" class="form-control "name="Rname" placeholder="receiver name" required>
+                            </div>
+                            <label for="receiver's email" class="col-sm-4">Email</label>
+                            <div class="col-sm-6">
+                                <input type="email" class="form-control" name="Remail" placeholder="receiver email" required>
+                            </div>
+                            <label for="receiver's phone" class="col-sm-4">Phone</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="Rphone" placeholder="receiver phone" required>
+                            </div>
+                            <label for="receiver's address" class="col-sm-4">Address</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="Raddress" placeholder="receiver address" required>
+                            </div>
+                            <label for="receiver's country" class="col-sm-4">Country</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="Rcountry" placeholder="receiver country" required>
+                            </div>
+                        </div>
+                    <div class="col-sm-6">
+                        <input type="submit" class="btn btn-warning"></div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </header>
+    
+
+   <footer class="row-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 col-sm-5">
+                    <h5>Our Address</h5>
+                    <address>
+		              Tampere University of Technology<br>
+		               <i class="fa fa-phone"></i>: +0XXXXXXXXXX<br>
+		              <i class="fa fa-fax"></i>: +XXXXXXXXXXXX<br>
+		              <i class="fa fa-envelope"></i>: 
+                    <a href="mailto:XXXX@XXXX.XXXX">XXX@XXX.com</a>
+		           </address>
+                </div>
+            </div>
+        </div>
+    </footer>
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script>
+        function openStatus(){
+
+        }
+    </script>
+</body>
+
+</html>
