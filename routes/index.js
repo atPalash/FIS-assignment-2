@@ -69,70 +69,7 @@ router.post('/register', function (req, res) {
         });
 });
 
-router.get('/login/orders', function (req,res,next) {
 
-    var db = mongoose.connection;
-    User.find({'username':CustomerUsername}, function (err, user) {
-        if (err) throw err;
-        var admin = user[0].admin;
-        if(admin == true){
-            orders.find({}, function (err, orders) {
-                if (err) throw err;
-                var i = 0;
-                var n = orders.length;
-                var Orders = JSON.parse(JSON.stringify(orders));
-                var orderdatatemp = '';
-                for( i = 0; i < n; i++){
-                    var ISODate = new Date(Orders[i].createdAt);
-
-                    var order_id = Orders[i]._id;
-                    var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
-                    var name = Orders[i].order[0].orderperson[0].name;
-                    var frame = Orders[i].order[0].item[0].frame;
-                    var frameColor = Orders[i].order[0].item[0].framecolor;
-                    var screen = Orders[i].order[0].item[0].screen;
-                    var screenColor = Orders[i].order[0].item[0].screencolor;
-                    var keyboard = Orders[i].order[0].item[0].keyboard;
-                    var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
-                    var quantity = Orders[i].order[0].item[0].quantity;
-                    var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
-                    var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
-                        +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
-                        +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
-                    orderdatatemp = orderdatatemp + ordertemp;}
-                res.writeHead(200,{'Content-Type':'text/plain'});
-                res.end('====YOU HAVE ADMIN PRIVILEGE====\n\n' + "----All THE CUSTOMER & ORDERS ARE BELOW---- \n\n" + orderdatatemp);
-            });
-        }
-        else{orders.find({'order.orderperson.name':CustomerUsername}, function (err, orders) {
-            if (err) throw err;
-            var i = 0;
-            var n = orders.length;
-            var Orders = JSON.parse(JSON.stringify(orders));
-            var orderdatatemp = '';
-            for( i = 0; i < n; i++){
-                var ISODate = new Date(Orders[i].createdAt);
-                var order_id = Orders[i]._id;
-                var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
-                var name = Orders[i].order[0].orderperson[0].name;
-                var frame = Orders[i].order[0].item[0].frame;
-                var frameColor = Orders[i].order[0].item[0].framecolor;
-                var screen = Orders[i].order[0].item[0].screen;
-                var screenColor = Orders[i].order[0].item[0].screencolor;
-                var keyboard = Orders[i].order[0].item[0].keyboard;
-                var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
-                var quantity = Orders[i].order[0].item[0].quantity;
-                var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
-                var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
-                    +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
-                    +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
-                orderdatatemp = orderdatatemp + ordertemp;}
-            res.writeHead(200,{'Content-Type':'text/plain'});
-            res.end('====YOU ARE NORMAL USER====\n\n' + "----All THE ORDERS ARE BELOW---- \n\n" + orderdatatemp);
-        });
-        }
-    });
-});
 router.get('/login/users', function (req,res,next) {
     var db = mongoose.connection;
     User.find({'username':CustomerUsername}, function (err, user) {
@@ -165,15 +102,39 @@ router.get('/login/users', function (req,res,next) {
     });
 });
 
+router.get('/login/orders', function (req,res,next) {
+
+    var db = mongoose.connection;
+    User.find({'username':CustomerUsername}, function (err, user) {
+        if (err) throw err;
+        var admin = user[0].admin;
+        if(admin == true){
+            var adminstat = "Admin";
+            var query = "{}";
+            var dbquery = JSON.parse(query);
+            DBquery(dbquery,adminstat,res);
+        }
+        else{
+            adminstat = "Not Admin";
+            query = JSON.stringify({"order.orderperson.name":CustomerUsername});
+            dbquery = JSON.parse(query);
+            DBquery(dbquery,adminstat, res);
+        }
+    });
+});
+
 router.post('/login/query', function (req,res,next) {
     var query = req.body.query;
-    var dbquery = JSON.parse(JSON.stringify(query));
-    console.log(dbquery);
-    var db = mongoose.connection;
+    var adminstat = "Admin";
+    var dbquery = JSON.parse(query);
+    DBquery(dbquery,adminstat,res);
+});
 
-    orders.find(dbquery, function (err, orders) {
+function DBquery(resquery,adminstat, res){
+    var db = mongoose.connection;
+    console.log(resquery);
+    orders.find(resquery, function (err, orders) {
         if (err) throw err;
-        //console.log(query);
         var n = orders.length;
         var Orders = JSON.parse(JSON.stringify(orders));
         var orderdatatemp = '';
@@ -195,8 +156,14 @@ router.post('/login/query', function (req,res,next) {
                 +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
                 +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
             orderdatatemp = orderdatatemp + ordertemp;}
-        res.writeHead(200,{'Content-Type':'text/plain'});
-        res.end('====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+            if(adminstat =="Admin"){
+                res.writeHead(200,{'Content-Type':'text/plain'});
+                res.end('******YOU ARE ADMIN******\n' + '====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+                }
+            else{
+                res.writeHead(200,{'Content-Type':'text/plain'});
+                res.end('******YOU ARE NOT ADMIN******\n' +'====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+            }
     });
-});
+}
 module.exports = router;
