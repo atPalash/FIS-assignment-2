@@ -6,6 +6,10 @@ var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
     order:[ {
+                orderstatus : {
+                    type:String,
+                    default: ''
+                },
                 orderperson: [{
                     name: {
                         type: String,

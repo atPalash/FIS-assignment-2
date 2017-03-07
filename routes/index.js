@@ -80,44 +80,50 @@ router.get('/login/orders', function (req,res,next) {
                 if (err) throw err;
                 var i = 0;
                 var n = orders.length;
+                var Orders = JSON.parse(JSON.stringify(orders));
                 var orderdatatemp = '';
                 for( i = 0; i < n; i++){
-                var order_id = orders[i]._id;
-                var name = orders[i].order[0].orderperson[0].name;
-                var frame = orders[i].order[0].item[0].frame;
-                var frameColor = orders[i].order[0].item[0].framecolor;
-                var screen = orders[i].order[0].item[0].screen;
-                var screenColor = orders[i].order[0].item[0].screencolor;
-                var keyboard = orders[i].order[0].item[0].keyboard;
-                var keyboardColor = orders[i].order[0].item[0].keyboardcolor;
-                var quantity = orders[i].order[0].item[0].quantity;
-                var shippingAddress = orders[i].order[0].shipto[0].shippingaddress;
-                var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
-                                    +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
-                                    +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
-                orderdatatemp = orderdatatemp + ordertemp;}
+                    var ISODate = new Date(Orders[i].createdAt);
+
+                    var order_id = Orders[i]._id;
+                    var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+                    var name = Orders[i].order[0].orderperson[0].name;
+                    var frame = Orders[i].order[0].item[0].frame;
+                    var frameColor = Orders[i].order[0].item[0].framecolor;
+                    var screen = Orders[i].order[0].item[0].screen;
+                    var screenColor = Orders[i].order[0].item[0].screencolor;
+                    var keyboard = Orders[i].order[0].item[0].keyboard;
+                    var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
+                    var quantity = Orders[i].order[0].item[0].quantity;
+                    var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
+                    var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
+                        +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
+                        +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
+                    orderdatatemp = orderdatatemp + ordertemp;}
                 res.writeHead(200,{'Content-Type':'text/plain'});
                 res.end('====YOU HAVE ADMIN PRIVILEGE====\n\n' + "----All THE CUSTOMER & ORDERS ARE BELOW---- \n\n" + orderdatatemp);
-                });
+            });
         }
         else{orders.find({'order.orderperson.name':CustomerUsername}, function (err, orders) {
             if (err) throw err;
-            var n = orders.length;
             var i = 0;
-            //console.log(n);
+            var n = orders.length;
+            var Orders = JSON.parse(JSON.stringify(orders));
             var orderdatatemp = '';
             for( i = 0; i < n; i++){
-                var order_id = orders[i]._id;
-                var name = orders[i].order[0].orderperson[0].name;
-                var frame = orders[i].order[0].item[0].frame;
-                var frameColor = orders[i].order[0].item[0].framecolor;
-                var screen = orders[i].order[0].item[0].screen;
-                var screenColor = orders[i].order[0].item[0].screencolor;
-                var keyboard = orders[i].order[0].item[0].keyboard;
-                var keyboardColor = orders[i].order[0].item[0].keyboardcolor;
-                var quantity = orders[i].order[0].item[0].quantity;
-                var shippingAddress = orders[i].order[0].shipto[0].shippingaddress;
-                var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
+                var ISODate = new Date(Orders[i].createdAt);
+                var order_id = Orders[i]._id;
+                var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+                var name = Orders[i].order[0].orderperson[0].name;
+                var frame = Orders[i].order[0].item[0].frame;
+                var frameColor = Orders[i].order[0].item[0].framecolor;
+                var screen = Orders[i].order[0].item[0].screen;
+                var screenColor = Orders[i].order[0].item[0].screencolor;
+                var keyboard = Orders[i].order[0].item[0].keyboard;
+                var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
+                var quantity = Orders[i].order[0].item[0].quantity;
+                var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
+                var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"name: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
                     +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
                     +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
                 orderdatatemp = orderdatatemp + ordertemp;}
@@ -132,7 +138,7 @@ router.get('/login/users', function (req,res,next) {
     User.find({'username':CustomerUsername}, function (err, user) {
         if (err) throw err;
         var admin = user[0].admin;
-        console.log(admin);
+        //console.log(admin);
         if(admin == true){
             User.find({}, function (err, users) {
                 var usernum = users.length;
@@ -159,4 +165,38 @@ router.get('/login/users', function (req,res,next) {
     });
 });
 
+router.post('/login/query', function (req,res,next) {
+    var query = req.body.query;
+    var dbquery = JSON.parse(JSON.stringify(query));
+    console.log(dbquery);
+    var db = mongoose.connection;
+
+    orders.find(dbquery, function (err, orders) {
+        if (err) throw err;
+        //console.log(query);
+        var n = orders.length;
+        var Orders = JSON.parse(JSON.stringify(orders));
+        var orderdatatemp = '';
+        for( i = 0; i < n; i++){
+            var ISODate = new Date(Orders[i].createdAt);
+            var order_id = Orders[i]._id;
+            var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+            var orderStatus = Orders[i].order[0].orderstatus;
+            var name = Orders[i].order[0].orderperson[0].name;
+            var frame = Orders[i].order[0].item[0].frame;
+            var frameColor = Orders[i].order[0].item[0].framecolor;
+            var screen = Orders[i].order[0].item[0].screen;
+            var screenColor = Orders[i].order[0].item[0].screencolor;
+            var keyboard = Orders[i].order[0].item[0].keyboard;
+            var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
+            var quantity = Orders[i].order[0].item[0].quantity;
+            var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
+            var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"order status: "+orderStatus+"\n"+ "username: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
+                +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
+                +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
+            orderdatatemp = orderdatatemp + ordertemp;}
+        res.writeHead(200,{'Content-Type':'text/plain'});
+        res.end('====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+    });
+});
 module.exports = router;
