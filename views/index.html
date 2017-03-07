@@ -45,9 +45,22 @@
                         <li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a onclick="openStatus()">
-                            <span class="glyphicon glyphicon-log-in"></span> Order-Status</a>
-                        </li>
+                        <!--<form class="form-horizontal" role="form" action="/orders" method="post">
+                            <input type="submit"><span class="glyphicon glyphicon-log-in"></span> Order-Status
+                        </li>-->
+                        <form action = "/login/orders" method = "get">
+                            <button type="submit"><a><span class="glyphicon glyphicon-log-in"></span>OrderData</a></button>
+                        </form></ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <form action = "/login/users" method = "get">
+                            <button type="submit"><a><span class="glyphicon glyphicon-log-in"></span>UserData</a></button>
+                        </form>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <form action = "/login/query" method = "post">
+                            <input type="text" class="form-control" name="query" placeholder="query">
+                            <button type="submit"><a><span class="glyphicon glyphicon-log-in"></span>For Query</a></button>
+                        </form>
                     </ul>
                 </div>
             </div>
@@ -57,7 +70,7 @@
         <div class="container">
             <div class="row row-header">
                 <div class="col-xs-12 col-sm-4 col-sm-push-8">
-                    <h1>FIS Assignment-1</h1>
+                    <h1>FIS Assignment-2</h1>
                     <p style="padding:40px;"></p>
                     <p>HTML form input to XML conversion and validation</p>
             </div>
@@ -65,9 +78,9 @@
                 <form class="form-horizontal" role="form" action="/orders" method="post">
                     <label for="Buyer's Details" class="col-sm-8"><h3><i>Buyer's Details</i></h3></label>
                         <div class="col-sm-8">
-                                <label for="name" class="col-sm-4">Name</label>
+                                <label for="name" class="col-sm-4">User Name</label>
                                 <div class = "col-sm-6">
-                                    <input type="text" class="form-control "name="name" placeholder="name" required>
+                                    <input type="text" class="form-control "name="name" placeholder="username" required>
                                 </div>
                                 <label for="email" class="col-sm-4">Email</label>
                                 <div class="col-sm-6">
@@ -102,8 +115,8 @@
                                 <div class="col-sm-6">
                                     <select name="framecolor" class="form-control">
                                         <option value="red">Red</option>
-                                        <option value="saab">Green</option>
-                                        <option value="fiat">Blue</option>
+                                        <option value="green">Green</option>
+                                        <option value="blue">Blue</option>
                                     </select>
                                 </div>
                                 <label for="screen type" class="col-sm-4">Screen-type</label>

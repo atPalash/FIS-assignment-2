@@ -6,10 +6,10 @@ var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
     order:[ {
-                // orderid: {
-                //     type: mongoose.Schema.Types.ObjectId,
-                //     auto: true
-                // },
+                orderstatus : {
+                    type:String,
+                    default: ''
+                },
                 orderperson: [{
                     name: {
                         type: String,
@@ -78,10 +78,6 @@ var orderSchema = new Schema({
                     required:true
                     }
                 }],
-                // date: {
-                //     type: Date,
-                //     default: Date.now
-                // },
                 shipto:[{
                 shippingname: {
                     type: String,

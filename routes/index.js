@@ -5,11 +5,13 @@ var passport = require('passport');
 var User = require('../models/user');
 var Verify = require('./verify');
 var path = require("path");
+var mongoose = require('mongoose');
+var assert = require('assert');
+var parser = require('json-parser');
+var orders = require('../models/orders');
 
-/* GET home page. */
-// router.get('/register', function(req, res, next) {
-//     res.render('register');
-// });
+
+
 router.get('/', function(req, res, next) {
     res.render('login');
 });
@@ -32,15 +34,10 @@ router.post('/login', function (req, res, next) {
             }
 
             var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-            var dir =path.join(__dirname,'../','/views');
+            global.CustomerUsername = user.username;
 
-            console.log(dir);
+            var dir =path.join(__dirname,'../','/views');
             res.sendFile(dir + '/index.html');
-            // res.status(200).json({
-            //   status: 'Login successful!',
-            //   success: true,
-            //   token: token
-            // });
         });
     })(req, res, next);
 });
@@ -72,4 +69,101 @@ router.post('/register', function (req, res) {
         });
 });
 
+
+router.get('/login/users', function (req,res,next) {
+    var db = mongoose.connection;
+    User.find({'username':CustomerUsername}, function (err, user) {
+        if (err) throw err;
+        var admin = user[0].admin;
+        //console.log(admin);
+        if(admin == true){
+            User.find({}, function (err, users) {
+                var usernum = users.length;
+                var j = 0;
+                var user_order_data = "";
+                var userData = "";
+                for( j = 0; j < usernum; j++){
+                    var user_id = users[j]._id;
+                    var name = users[j].username;
+                    var admin = users[j].admin;
+                    var lastName = users[j].lastname;
+                    var firstName = users[j].firstname;
+                    var usertemp = "--------------------\n"+"customer id: "+user_id+"\n" +"admin: "+admin+"\n" +"username: "+name+"\n" + "firstname: "+firstName+"\n" +"lastname: "+lastName+ "\n\n\n";
+                    userData = userData + usertemp;
+                }
+                // user_order_data = user_order_data + userData;
+                res.writeHead(200,{'Content-Type':'text/plain'});
+                res.end('====YOU HAVE ADMIN PRIVILEGE====\n\n' + "----All THE USERS ARE BELOW---- \n\n" + userData);});
+        }else
+        {
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end("You are not authorised to view other users");
+        }
+    });
+});
+
+router.get('/login/orders', function (req,res,next) {
+
+    var db = mongoose.connection;
+    User.find({'username':CustomerUsername}, function (err, user) {
+        if (err) throw err;
+        var admin = user[0].admin;
+        if(admin == true){
+            var adminstat = "Admin";
+            var query = "{}";
+            var dbquery = JSON.parse(query);
+            DBquery(dbquery,adminstat,res);
+        }
+        else{
+            adminstat = "Not Admin";
+            query = JSON.stringify({"order.orderperson.name":CustomerUsername});
+            dbquery = JSON.parse(query);
+            DBquery(dbquery,adminstat, res);
+        }
+    });
+});
+
+router.post('/login/query', function (req,res,next) {
+    var query = req.body.query;
+    var adminstat = "Admin";
+    var dbquery = JSON.parse(query);
+    DBquery(dbquery,adminstat,res);
+});
+
+function DBquery(resquery,adminstat, res){
+    var db = mongoose.connection;
+    console.log(resquery);
+    orders.find(resquery, function (err, orders) {
+        if (err) throw err;
+        var n = orders.length;
+        var Orders = JSON.parse(JSON.stringify(orders));
+        var orderdatatemp = '';
+        for( i = 0; i < n; i++){
+            var ISODate = new Date(Orders[i].createdAt);
+            var order_id = Orders[i]._id;
+            var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+            var orderStatus = Orders[i].order[0].orderstatus;
+            var name = Orders[i].order[0].orderperson[0].name;
+            var frame = Orders[i].order[0].item[0].frame;
+            var frameColor = Orders[i].order[0].item[0].framecolor;
+            var screen = Orders[i].order[0].item[0].screen;
+            var screenColor = Orders[i].order[0].item[0].screencolor;
+            var keyboard = Orders[i].order[0].item[0].keyboard;
+            var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
+            var quantity = Orders[i].order[0].item[0].quantity;
+            var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
+            var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"order status: "+orderStatus+"\n"+ "username: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
+                +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
+                +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
+            orderdatatemp = orderdatatemp + ordertemp;}
+            if(adminstat =="Admin"){
+                res.writeHead(200,{'Content-Type':'text/plain'});
+                res.end('******YOU ARE ADMIN******\n' + '====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+                }
+            else{
+                res.writeHead(200,{'Content-Type':'text/plain'});
+                res.end('******YOU ARE NOT ADMIN******\n' +'====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+            }
+    });
+}
 module.exports = router;
