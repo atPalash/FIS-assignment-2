@@ -24,10 +24,7 @@ db.once('open', function () {
 
 var routes = require('./routes/index');
 var orders = require('./routes/orders');
-
-
 var cons = require('consolidate');
-
 var app = express();
 
 app.all('*', function (req, res, next) {

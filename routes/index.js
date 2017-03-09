@@ -109,25 +109,36 @@ router.get('/login/orders', function (req,res,next) {
         if (err) throw err;
         var admin = user[0].admin;
         if(admin == true){
-            var adminstat = "Admin";
             var query = "{}";
             var dbquery = JSON.parse(query);
-            DBquery(dbquery,adminstat,res);
+            DBquery(dbquery,admin,res);
         }
         else{
-            adminstat = "Not Admin";
             query = JSON.stringify({"order.orderperson.name":CustomerUsername});
             dbquery = JSON.parse(query);
-            DBquery(dbquery,adminstat, res);
+            DBquery(dbquery,admin, res);
         }
     });
 });
 
 router.post('/login/query', function (req,res,next) {
     var query = req.body.query;
-    var adminstat = "Admin";
-    var dbquery = JSON.parse(query);
-    DBquery(dbquery,adminstat,res);
+    User.find({'username':CustomerUsername}, function (err, user) {
+        if (err) throw err;
+        var admin = user[0].admin;
+        console.log(admin);
+        if ((query == "ordered") || (query == "production") || (query == "shipped")) {
+            var dbquery = query;
+            userDBquery(dbquery, admin, res);
+        }
+        else if (query == "active") {
+            Userquery(admin, res);
+        }
+        else {
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('INVALID QUERY');
+        }
+    })
 });
 
 function DBquery(resquery,adminstat, res){
@@ -151,19 +162,96 @@ function DBquery(resquery,adminstat, res){
             var keyboard = Orders[i].order[0].item[0].keyboard;
             var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
             var quantity = Orders[i].order[0].item[0].quantity;
+            var shippingName = Orders[i].order[0].shipto[0].shippingname;
             var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
             var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"order status: "+orderStatus+"\n"+ "username: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
                 +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
-                +"quantity: "+quantity+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
+                +"quantity: "+quantity+"\n" +"shippingName: "+shippingName+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
             orderdatatemp = orderdatatemp + ordertemp;}
-            if(adminstat =="Admin"){
-                res.writeHead(200,{'Content-Type':'text/plain'});
-                res.end('******YOU ARE ADMIN******\n' + '====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
-                }
-            else{
-                res.writeHead(200,{'Content-Type':'text/plain'});
-                res.end('******YOU ARE NOT ADMIN******\n' +'====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
-            }
+        if(adminstat == true){
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end('******YOU ARE ADMIN******\n' + '====ALL ORDER HISTORY====\n\n' + orderdatatemp);
+        }
+        else{
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end('******YOU ARE NORMAL USER******\n' +'====YOUR ORDER HISTORY====\n\n' + orderdatatemp);
+        }
     });
+}
+
+function userDBquery(resquery,adminstat, res){
+    var db = mongoose.connection;
+    console.log(resquery);
+    if(adminstat == true){
+    orders.find({'order.orderstatus':resquery}, function (err, orders) {
+        if (err) throw err;
+        var n = orders.length;
+        var Orders = JSON.parse(JSON.stringify(orders));
+        var orderdatatemp = '';
+        for( i = 0; i < n; i++){
+            var ISODate = new Date(Orders[i].createdAt);
+            var order_id = Orders[i]._id;
+            var orderDate = ISODate.getDate()+ '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+            var orderStatus = Orders[i].order[0].orderstatus;
+            var name = Orders[i].order[0].orderperson[0].name;
+            var frame = Orders[i].order[0].item[0].frame;
+            var frameColor = Orders[i].order[0].item[0].framecolor;
+            var screen = Orders[i].order[0].item[0].screen;
+            var screenColor = Orders[i].order[0].item[0].screencolor;
+            var keyboard = Orders[i].order[0].item[0].keyboard;
+            var keyboardColor = Orders[i].order[0].item[0].keyboardcolor;
+            var quantity = Orders[i].order[0].item[0].quantity;
+            var shippingName = Orders[i].order[0].shipto[0].shippingname;
+            var shippingAddress = Orders[i].order[0].shipto[0].shippingaddress;
+            var ordertemp = "--------------------\n" + "order id: "+order_id+"\n" +"order date: "+orderDate+"\n" +"order status: "+orderStatus+"\n"+ "username: "+name+"\n" + "frame type: "+frame+"\n" +"frame color: "+frameColor+"\n"
+                +"screen type: "+screen+"\n" +"screen color: "+screenColor+"\n" +"keyboard type: "+keyboard+"\n" +"keyboard color: "+keyboardColor+"\n"
+                +"quantity: "+quantity+"\n" +"shippingName: "+shippingName+"\n" +"shippingAddress: "+shippingAddress+"\n" +"\n\n\n";
+            orderdatatemp = orderdatatemp + ordertemp;}
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end('******YOU ARE ADMIN******\n' + '====SEARCH RESULT BASED ON YOUR QUERY====\n\n' + orderdatatemp);
+        })}
+        else{
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end('******YOU ARE NOT ADMIN******\n' +'====THIS IS NOT ALLOWED====\n\n');
+        }
+}
+
+function Userquery(adminstat, res){
+    var db = mongoose.connection;
+    //console.log(resquery);
+    if(adminstat == true){
+    User.find({}, function (err, users) {
+        if (err) throw err;
+        var n = users.length;
+        var Users = JSON.parse(JSON.stringify(users));
+        var today = new Date();
+        var dd1 = (today.getTime() / (1000 * 60 * 60)) - 7;
+        var dd2 = (today.getTime() / (1000 * 60 * 60));
+        var userdatatemp = '';
+        for (var i = n - 1; i > 0; i--) {
+            var ISODate = new Date(Users[i].createdAt);
+            var userdd = (ISODate.getTime() / (1000 * 60 * 60));
+            if ((userdd > dd1) && (userdd < dd2)) {
+                var userid = Users[i]._id;
+                var username = Users[i].username;
+                var firstname = Users[i].firstname;
+                var lastname = Users[i].lastname;
+                var userdate = ISODate.getDate() + '-' + ISODate.getMonth() + '-' + ISODate.getFullYear();
+
+                var usertemp = "--------------------\n" + "user id: " + userid + "\n" + "username: " + username + "\n" + "userCreatedOn: " + userdate + "\n"
+                    + "firstname: " + firstname + "\n" + "lastname: " + lastname + "\n\n\n";
+            } else {
+                break;
+            }
+            userdatatemp = userdatatemp + usertemp;
+        }
+
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('******YOU ARE ADMIN******\n' + '====ALL REGISTERED USERS====\n\n' + userdatatemp);
+    })}
+        else{
+            res.writeHead(200,{'Content-Type':'text/plain'});
+            res.end('******YOU ARE NOT ADMIN******\n' +'====YOU ARE NOT AUTHORISED FOR QUERY====\n\n');
+        }
 }
 module.exports = router;

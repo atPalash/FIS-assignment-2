@@ -28,7 +28,6 @@ router.route('/')
                 "email": req.body.email,
                 "phone": req.body.phone},
             "item":{
-                "title":req.body.title,
                 "frame":req.body.frame,
                 "framecolor":req.body.framecolor,
                 "screen":req.body.screen,
@@ -37,7 +36,6 @@ router.route('/')
                 "keyboardcolor":req.body.keycolor,
                 "note": req.body.note,
                 "quantity":req.body.quantity,
-                "price": req.body.price
             },
             "shipto":{
                 "shippingname":req.body.Rname,
