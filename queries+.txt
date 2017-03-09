@@ -1,0 +1,5 @@
+some MongoDB commands:
+*db.orders.find({'_id':ObjectId("58bc34b06d1a2c3244b92dc8")}).pretty()
+*db.orders.update({'_id':ObjectId("58bfd0e462844621440a4ffd")},{$set:{'order.0.orderstatus':"ordered"}})
+*db.orders.find({'order.orderstatus':"ordered"}).pretty()
+*mongoexport --db data --collection orders --out C:\Users\halder\Desktop\orders.json (Should be made at cmd)

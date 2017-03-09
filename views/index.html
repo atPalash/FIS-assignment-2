@@ -58,7 +58,12 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <form action = "/login/query" method = "post">
-                            <input type="text" class="form-control" name="query" placeholder="query">
+                            <select name="query" class="form-control">
+                                <option value="ordered">ordered</option>
+                                <option value="production">production</option>
+                                <option value="shipped">shipped</option>
+                                <option value="active">active</option>
+                            </select>
                             <button type="submit"><a><span class="glyphicon glyphicon-log-in"></span>For Query</a></button>
                         </form>
                     </ul>
@@ -93,10 +98,6 @@
                         </div>
                         <label for="Order Details" class="col-sm-8"><h3><i>Order Details</i></h3></label>
                         <div class="col-sm-8">
-                                <label for="order" class="col-sm-4">Order</label>
-                                <div class = "col-sm-6">
-                                    <input type="text" class="form-control "name="title" placeholder="order" required>
-                                </div>
                                 <label for="frame type" class="col-sm-4">Frame-type</label>
                                 <div class = "col-sm-6">
                                     <div class="radio">
@@ -137,7 +138,7 @@
                                     <select name="screencolor" class="form-control">
                                         <option value="red">Red</option>
                                         <option value="green">Green</option>
-                                        <option value="green">Blue</option>
+                                        <option value="blue">Blue</option>
                                     </select>
                                 </div>
                                 <label for="key type" class="col-sm-4">Keyboard-type</label>
@@ -159,7 +160,7 @@
                                     <select name="keycolor" class="form-control">
                                         <option value="red">Red</option>
                                         <option value="green">Green</option>
-                                        <option value="green">Blue</option>
+                                        <option value="blue">Blue</option>
                                     </select>
                                 </div>
                                 <label for="comments" class="col-sm-4">Comments</label>
@@ -169,10 +170,6 @@
                                 <label for="quantity" class="col-sm-4">Quantity</label>
                                 <div class="col-sm-6">
                                     <input type="number" class="form-control" name="quantity" placeholder="quantity" required>
-                                </div>
-                                <label for="price" class="col-sm-4">Price</label>
-                                <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="price" placeholder="price" required>
                                 </div>
                         </div>
                         <label for="Receiver's Details" class="col-sm-8"><h3><i>Receiver's Details</i></h3></label>
